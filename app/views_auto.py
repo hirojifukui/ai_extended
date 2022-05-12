@@ -20,15 +20,21 @@ def allowed_file(filename):
 def evaluate_img(path):
     img = cv2.imread(path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Convert a color image to a grayscale image 
     ret, thresh = cv2.threshold(gray, 0, 255,cv2.THRESH_OTSU|cv2.THRESH_BINARY_INV)
+    # Convert the grayscale image to blak and white image
     # cv2.imshow('threh',thresh)
     # cv2.waitKey(0)
     rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
+    # Define size of kernel
     dilation = cv2.dilate(thresh, rect_kernel, iterations =5)
+    #cv2.dilate makes the font thicker. 
     # cv2.imshow('dilation',dilation)
     # cv2.waitKey(0)
     contors, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # cv2.findCOntours find groups of continuous color/brightness changes
     sorted_ctrs = sorted(contors, key=lambda contors: cv2.boundingRect(contors)[0])
+    # sort the contors by upper left coordinate
     #print("Contors: ", sorted_ctrs)
     im2 = dilation.copy()
     results=[]
@@ -39,11 +45,15 @@ def evaluate_img(path):
         print("Mkdir error", x)
     for i in sorted_ctrs:
         x,y,w,h = cv2.boundingRect(sorted_ctrs[num_img])
+        # cv2.boundingRect returns the upper left cordinates, width, and height that 
+        # can encloses a contour
         print("print x, y, w, h:", x, y, w, h)
         cropped = im2[y:y+h, x:x+w]
+        # Extract an image from the larger image
         bg = np.zeros((28,28), np.uint8)
         if w>=h:
             resized = cv2.resize(cropped, (26, int(round(26*h/w))), interpolation=cv2.INTER_AREA)
+            # cv2.resize resies the given image with specified interporation method
             rh, rw = resized.shape
             print("Shape:", rh, rw)
             bg[round((28-rh)/2):round((28-rh)/2)+rh, 1:27]=resized
