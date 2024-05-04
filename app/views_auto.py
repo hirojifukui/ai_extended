@@ -5,7 +5,8 @@ from app.forms import (UploadForm, ResultForm)
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import numpy as np
-from keras.preprocessing import image
+# from keras_preprocessing import image
+from keras.utils import img_to_array
 from keras.models import load_model
 from PIL import Image
 import cv2
@@ -67,7 +68,7 @@ def evaluate_img(path):
         char_path = os.path.join(path[:-4], str(num_img)+".png")
         cv2.imwrite(char_path,bg)
         img_path = char_path.split("app")[1]
-        x = image.img_to_array(bg)    
+        x = img_to_array(bg)    
         #print ("Ave - 128: ", np.average(x)-128)
         if np.average(x)-128 > 0:
             x = 255 - x
