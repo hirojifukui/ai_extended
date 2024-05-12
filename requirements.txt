@@ -1,7 +1,5 @@
 Flask==2.2.2
 Flask_WTF==1.0.1
-keras==3.3.3
-keras==2.10.0
 numpy==1.23.4
 opencv_python==4.6.0.66
 Pillow==9.3.0
